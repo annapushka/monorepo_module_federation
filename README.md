@@ -1,0 +1,1 @@
+# monorepo_module_federation
