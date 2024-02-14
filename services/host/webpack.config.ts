@@ -2,12 +2,16 @@
 import webpack from 'webpack';
 import path from 'path';
 import { BuildMode, BuildPaths, BuildPlatform, buildWebpack } from '@packages/build-config';
+import packageJason from './package.json';
+
 
 interface EnvVariables {
   mode: BuildMode;
   port: number;
   analyzer?: boolean;
   platform?: BuildPlatform;
+  SHOP_REMOTE_URL: string;
+  ADMIN_REMOTE_URL: string;
 }
 
 
@@ -27,5 +31,30 @@ export default (env: EnvVariables) => {
     analyzer: env.analyzer,
     platform: env.platform ?? 'desktop',
   })
+
+  config.plugins.push(new webpack.container.ModuleFederationPlugin({
+    name: 'host',
+    filename: 'remoteEntry.js',
+    remotes: {
+      shop: `shop@${SHOP_REMOTE_URL}/remoteEntry.js`,
+      admin: `admin@${ADMIN_REMOTE_URL}/remoteEntry.js`,
+    },
+    shared: {
+      ...packageJason.dependencies,
+      react: {
+        eager: true,
+        requiredVersion: packageJason.dependencies.react,
+      },
+      'react-dom': {
+        eager: true,
+        requiredVersion: packageJason.dependencies['react-dom'],
+      },
+      'react-router-dom': {
+        eager: true,
+        requiredVersion: packageJason.dependencies['react-router-dom'],
+      }
+    }
+  }))
+
     return config;
 };
