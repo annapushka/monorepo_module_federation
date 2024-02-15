@@ -1,13 +1,19 @@
-import { Link, Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom";
+import { deepMerge } from '@packages/shared/src/utils/deepMerge';
+import { UserCard } from "@packages/shared/src/components/UserCard";
 
 export const App = () => {
+
+    const handleClick = () => {
+        deepMerge({a: 1}, {b: 2})
+    }
+
     return (
-        <div data-testid={'App.DataTestId'}>
-            <h1>PAGE</h1>
-            <Link to={'/about'}>ABOUT</Link>
-            <br/>
-            <Link to={'/shop'}>SHOP</Link>
+        <div>
+            <h1>ADMIN MODULE</h1>
+            <button onClick={handleClick}>merge</button>
             <Outlet/>
+            <UserCard username="Admin"/>
         </div>
     )
 }

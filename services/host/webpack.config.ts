@@ -10,8 +10,8 @@ interface EnvVariables {
   port: number;
   analyzer?: boolean;
   platform?: BuildPlatform;
-  SHOP_REMOTE_URL: string;
-  ADMIN_REMOTE_URL: string;
+  SHOP_REMOTE_URL?: string;
+  ADMIN_REMOTE_URL?: string;
 }
 
 
@@ -23,6 +23,9 @@ export default (env: EnvVariables) => {
     public: path.resolve(__dirname, 'public'),
     src: path.resolve(__dirname, 'src'),
   }
+
+  const SHOP_REMOTE_URL = env.SHOP_REMOTE_URL ?? 'http://localhost:3001'
+  const ADMIN_REMOTE_URL = env.ADMIN_REMOTE_URL ?? 'http://localhost:3002'
 
   const config: webpack.Configuration = buildWebpack({
     mode: env.mode ?? 'development',
